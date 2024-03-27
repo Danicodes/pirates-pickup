@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Pirate from "./components/Pirate";
 import AddPirate from "./components/AddPirate";
@@ -21,6 +21,27 @@ function randomize() {
 
 function App() {
 	const [pirates, setPirates] = useState(piratesFile);
+	const [serverUrl, setServerUrl] = useState('http://localhost:3005/pirates');
+	
+	useEffect(() => {
+		// Set up code
+		// Create async function to run fetch
+		const fetchData = async () => {
+			try {
+				let response = await fetch(serverUrl);
+				let fetchedPirates = await response.json();
+				setPirates(fetchedPirates);
+			} catch(e) {
+				console.log(`Error: ${e}`);
+				setPirates([]);
+			}
+		}
+		fetchData();
+		
+		// Tear down code
+		return () => setPirates([]);
+
+	}, [serverUrl, setPirates])
 
 	const addPirate = (pirate) => {
 		//const newPirates = [pirate, ...pirates];
