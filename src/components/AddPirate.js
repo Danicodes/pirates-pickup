@@ -1,25 +1,29 @@
 import "../assets/css/AddPirateForm.css";
+import Button from "./Button";
 import { useState } from "react";
 
 const AddPirate = ({ addPirate }) => {
-	const [name, setName] = useState("");
-	const [vessel, setVessel] = useState("");
-	const [weapon, setWeapon] = useState("");
+	const initialFormState = {
+		name: "",
+		vessel: "",
+		weapon: "",
+		year: "",
+		desc: "",
+	};
+
+	const [pirate, setPirate] = useState(initialFormState);
 
 	function createPirate(event) {
 		event.preventDefault();
-		console.log("Making a pirate");
-		const pirate = {
-			name,
-			vessel,
-			weapon,
-		};
 		addPirate(pirate);
-
-		setName("");
-		setVessel("");
-		setWeapon("");
+		setPirate(initialFormState);
 	}
+
+	const handleInputChange = (target) => {
+		let { name, value } = target;
+		setPirate({ ...pirate, [name]: value });
+	};
+
 	return (
 		<form onSubmit={(event) => createPirate(event)}>
 			<label htmlFor="pirate-name-input">Name</label>
@@ -27,9 +31,10 @@ const AddPirate = ({ addPirate }) => {
 				id="pirate-name-input"
 				type="text"
 				placeholder="Pirate name"
-				value={name}
+				value={pirate.name}
+				name="name"
 				onChange={(event) => {
-					setName(event.target.value);
+					handleInputChange(event.target);
 				}}
 			/>
 			<label htmlFor="pirate-vessel-input">Vessel</label>
@@ -37,9 +42,10 @@ const AddPirate = ({ addPirate }) => {
 				id="pirate-vessel-input"
 				type="text"
 				placeholder="Pirate vessel"
-				value={vessel}
+				value={pirate.vessel}
+				name="vessel"
 				onChange={(event) => {
-					setVessel(event.target.value);
+					handleInputChange(event.target);
 				}}
 			/>
 			<label htmlFor="pirate-weapon-input">Weapon</label>
@@ -47,12 +53,30 @@ const AddPirate = ({ addPirate }) => {
 				id="pirate-weapon-input"
 				type="text"
 				placeholder="Pirate weapon"
-				value={weapon}
+				name="weapon"
+				value={pirate.weapon}
 				onChange={(event) => {
-					setWeapon(event.target.value);
+					handleInputChange(event.target);
 				}}
 			/>
-			<button type="submit">Add Pirate</button>
+			<label htmlFor="died">Died</label>
+			<input
+				id="died"
+				type="text"
+				placeholder="Date of death"
+				value={pirate.year}
+				name="year"
+				onChange={(event) => handleInputChange(event.target)}
+			/>
+			<label htmlFor="desc">Description</label>
+			<textarea
+				id="desc"
+				placeholder="Pirate description"
+				value={pirate.desc}
+				name="desc"
+				onChange={(event) => handleInputChange(event.target)}
+			/>
+			<Button text="Add a Pirate"></Button>
 		</form>
 	);
 };
